@@ -25,11 +25,11 @@
 			<div
 				class="swiper-image swiper-image--overlay"
 				:class="{ left: isPanLeft, right: isPanRight }"
-				:style="[style, { backgroundImage: !question.isFlexibleHeight && 'url(' + question.imgSrc + ')' }]"
+				:style="[style, { backgroundImage: !this.question.isFlexibleHeight && 'url(' + this.question.imgSrc + ')' }]"
 			    v-if="question.active"
 			>
 				<img :src="question.imgSrc" alt="" v-if="question.isFlexibleHeight">
-				<div class="swiper-question">{{ question.text }}</div>
+				<div class="swiper-question">{{ this.question.text }}</div>
 			</div>
 		</v-touch>
 
@@ -40,27 +40,27 @@
 		-->
 		<div
 			class="swiper-image swiper-image--underlay"
-			:class="{ 'swiper-image--fixed': !question.isFlexibleHeight }"
+			:class="{ 'swiper-image--fixed': !this.question.isFlexibleHeight }"
 			:style="{ backgroundImage: setUnderlayBackgroundImage() }"
 		>
-			<img v-if="question.isFlexibleHeight" :src="question.imgSrc" alt="" style="opacity: 0; visibility: hidden;">
+			<img v-if="this.question.isFlexibleHeight" :src="this.question.imgSrc" alt="" style="opacity: 0; visibility: hidden;">
 		</div>
 		
 		<!-- results -->
 		<div class="swiper-results">
 			<transition name="fadeIn">
-				<div v-if="results.isCorrect && results.active"  class="swiper-result swiper-result--correct">CORRECT</div>
-				<div v-if="!results.isCorrect && results.active" class="swiper-result swiper-result--incorrect">INCORRECT</div>
+				<div v-if="this.results.isCorrect && this.results.active"  class="swiper-result swiper-result--correct">CORRECT</div>
+				<div v-if="!this.results.isCorrect && this.results.active" class="swiper-result swiper-result--incorrect">INCORRECT</div>
 			</transition>
 			<!-- show after answer -->
-			<div class="swiper-question">{{ question.text }}</div>
+			<div class="swiper-question">{{ this.question.text }}</div>
 		</div>
 	</div> <!-- main END -->
 	
 	<div class="swiper-answers">
 		<!-- set one of as active on panEnd -->
-		<div class="answer accept" :class="{ active: answer.accept }" v-on:click="onAnswerClick">{{answer.acceptText}}</div>
-		<div class="answer cancel" :class="{ active: answer.cancel }" v-on:click="onAnswerClick">{{answer.cancelText}}</div>
+		<div class="answer accept" :class="{ active: this.answer.accept }" v-on:click="onAnswerClick">{{this.answer.acceptText}}</div>
+		<div class="answer cancel" :class="{ active: this.answer.cancel }" v-on:click="onAnswerClick">{{this.answer.cancelText}}</div>
 	</div>
 </div> <!-- swiper END -->
 

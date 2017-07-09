@@ -12,65 +12,147 @@ require('../static/images/table-football.jpg');
  */
 function DOMLoaded() {
 
+	const delay = (time) => (result) => new Promise(resolve => setTimeout(() => resolve(result), time));
+
 	Vue.use(VueTouch);
 
 	// +TODO: flexible height
 	// +TODO: fallback for underlay if there is no underlay image(set from overlay)
-	// TODO: multiple question support
+	// +TODO: multiple question support
+	// Hammer Pan Events: pan, panstart, panmove, panend, pancancel, panleft, panright, panup, pandown
 
+	const swiperDefaults = {
+		enablePlay: true,				// enable/disable events
+		isPanLeft: false,
+		isPanRight: false,
+		xLimit: 150,					// - horizontal pan limit in px
+		yLimit: 20,						// - vertical pan limit in px
+		rLimit: 15,						// - rotate on pan limit in px
+		enableSwipeX: true, 			// - default false
+		enableSwipeY: true,				// - not used
+		style: {}						// - inline css object
+	};
 	const swiper = new Vue({
 		el: '#swiper',
 		data: {
-			isPanLeft: false,
-			isPanRight: false,
-			xLimit: 150,					// - horizontal pan limit in px
-			yLimit: 20,						// - vertical pan limit in px
-			rLimit: 15,						// - rotate on pan limit in px
-			enablePlay: false,
-			enableSwipeX: true, 			// - default false
-			enableSwipeY: true,				// - not used
-			style: {},						// - inline css object
+			...swiperDefaults,			// default params
+			question: {},				// current
+			answer: {},					// current
+			results: {},				// current
+			enablePlay: false,			// initially overrides default value
+			currentIndex: 0,			// index of items to iterate data
 			hint: {
-				enable: true,
+				enable: false,
 				isVisible: false
 			},
-			question: {
-				active: true,
-				text: 'זה משחק נחמד?',
-				imgSrc: './static/images/table-football.jpg',
-				imgSrcBack: './static/images/gil2.jpg',
-				isFlexibleHeight: true
+			timeline: {
+				showHintDelay: 300,
+				hideHintDelay: 2000,
+				questionLeaveDuration: 300,
+				showResultsDuration: 3000
 			},
-			answer: {
-				accept: false,				// - accept button state
-				cancel: false,				// - cancel button state
-				acceptText: 'כן',
-				cancelText: 'לא'
-			},
-			results: {
-				active: false,				// - show results state
-				correctType: 'accept',	 	// - left = answers.cancel | right = answers.accept
-				isCorrect: null				// - is correct answer state
-			}
+			items: [
+				{
+					question: {
+						active: true,
+						text: '1 - זה משחק נחמד?',
+						imgSrc: './static/images/table-football.jpg',
+						imgSrcBack: './static/images/gil2.jpg',
+						isFlexibleHeight: true
+					},
+					answer: {
+						accept: false,
+						cancel: false,
+						acceptText: 'כן',
+						cancelText: 'לא'
+					},
+					results: {
+						active: false,
+						correctType: 'accept',
+						isCorrect: null
+					}
+				},
+				{
+					question: {
+						active: true,
+						text: '2 - זה משחק נחמד?',
+						imgSrc: './static/images/gil2.jpg',
+						imgSrcBack: './static/images/table-football.jpg',
+						isFlexibleHeight: true
+					},
+					answer: {
+						accept: false,
+						cancel: false,
+						acceptText: 'כן',
+						cancelText: 'לא'
+					},
+					results: {
+						active: false,
+						correctType: 'accept',
+						isCorrect: null
+					}
+				},
+				{
+					question: {
+						active: true,
+						text: '3 - זה משחק נחמד?',
+						imgSrc: './static/images/table-football.jpg',
+						imgSrcBack: '',
+						isFlexibleHeight: false
+					},
+					answer: {
+						accept: false,
+						cancel: false,
+						acceptText: 'כן',
+						cancelText: 'לא'
+					},
+					results: {
+						active: false,
+						correctType: 'accept',
+						isCorrect: null
+					}
+				}
+			]
+		},
+		beforeMount: function() {
+			console.log('beforeMount');
+			this.setCurrentItem();
+		},
+		mounted: function() {
+			console.log('mounted');
+		},
+		beforeUpdate: function() {
+			console.log('beforeUpdate');
+		},
+		updated: function() {
+			console.log('updated');
 		},
 		created: function() {
-			if (this.hint.enable) {
-				setTimeout(function() {
-					this.hint.isVisible = true;
-					this.runHint();
-				}.bind(this), 300);
-			} else {
-				this.enablePlay = true;
-			}
+			this.runHint();
 		},
 		methods: {
 			'runHint': function () {
-				setTimeout(() => {
+				this.hint.enable = this.currentIndex === 0;
+
+				const { showHintDelay, hideHintDelay } = this.timeline;
+				const showHint = () => {
+					this.hint.isVisible = true;
+				};
+				const hideHint = () => {
 					this.hint.isVisible = false;
 					this.enablePlay = true;
-				}, 2000);
+				};
+
+				if (this.hint.enable) {
+					Promise.resolve()
+						.then(delay(showHintDelay))
+						.then(showHint)
+						.then(delay(hideHintDelay))
+						.then(hideHint);
+				} else {
+					this.enablePlay = true;
+				}
 			},
-			//Panning - pan, panstart, panmove, panend, pancancel, panleft, panright, panup, pandown
 			'onPanMove': function ({ deltaX, deltaY }, ...rest) {
 				//console.info('PanMove: ', deltaX, deltaY, rest);
 				const { xLimit, yLimit, rLimit } = this;
@@ -118,7 +200,7 @@ function DOMLoaded() {
 				this.hideQuestion({ animateBefore: true });
 				this.showResults();
 			},
-			'hideQuestion': function({ animateBefore = false, duration = 300 }) {
+			'hideQuestion': function({ animateBefore = false, duration = this.timeline.questionLeaveDuration }) {
 				const { style } = this;
 				const { accept } = this.answer;
 
@@ -138,50 +220,39 @@ function DOMLoaded() {
 				}
 			},
 			'showResults': function() {
-				this.results.active = true;
-				this.results.isCorrect = this.answer[this.results.correctType];
-				this.enablePlay = false;
+				const { showResultsDuration } = this.timeline;
+				Promise.resolve()
+					.then(() => {
+						this.results.active = true;
+						this.results.isCorrect = this.answer[this.results.correctType];
+						this.enablePlay = false;
+					})
+					.then(delay(showResultsDuration))
+					.then(this.showNextQuestion);
 			},
 			'reset': function() {
-				// - not used
-				this.enablePlay = true;
-				this.answer.accept = false;
-				this.answer.cancel = false;
+				Object.assign(this, swiperDefaults, {});
 			},
 			'showNextQuestion': function() {
 				// ... iterate data array
+				const nextIndex = this.currentIndex + 1;
+				if (this.items.length > nextIndex) {
+					Promise.resolve()
+						.then(this.reset)
+						.then(() => {
+							this.currentIndex = nextIndex;
+							this.setCurrentItem(nextIndex);
+						});
+				}
 			},
 			'setUnderlayBackgroundImage': function() {
 				const url = this.question.imgSrcBack || this.question.imgSrc;
 				return `url(${url})`;
-			}
-		}
-	});
-
-	const flipper = new Vue({
-		el: '#flipper',
-		data: {
-			flip: false,
-			touched: false,
-			tip: {
-				text: 'הפכו וגלו'
 			},
-			front: {
-				src: 'http://demos2.gambit.ph/before-after/wp-content/uploads/sites/10449/2014/12/5fcb0a55.jpeg',
-				credit: 'סלבה',
-				text: 'מקנה לדירה מראה כפרי'
-			},
-			back: {
-				src: 'http://demos2.gambit.ph/before-after/wp-content/uploads/sites/10449/2014/12/5fcb0a55_.jpg',
-				credit: 'זיו קורן',
-				text: 'הוספת טקסטיל ושטיחים מקנה לדירה מראה כפרי ונעים ובעלות זניחה יח'
-			}
-		},
-		methods: {
-			flipCard: function() {
-				this.tip.active = false;
-				this.flip = !this.flip;
-				this.touched = true;
+			'setCurrentItem': function(index = this.currentIndex) {
+				this.question	 = this.items[index].question;
+				this.answer		 = this.items[index].answer;
+				this.results	 = this.items[index].results;
 			}
 		}
 	});

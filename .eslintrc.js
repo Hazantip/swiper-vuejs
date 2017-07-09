@@ -23,7 +23,7 @@ module.exports = {
       "never"
     ],
     "array-callback-return": "error",
-    "arrow-body-style": "error",
+    "arrow-body-style": "off",
     "arrow-parens": "off",
     "arrow-spacing": [
       "error",
