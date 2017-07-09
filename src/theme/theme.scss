@@ -15,22 +15,9 @@ body {
 	box-sizing: border-box;
 }
 
-.title, hr {
-	text-align: center;
-	margin: 40px 0;
-}
 
-.vueBox {
-	background-color: #f8f8f8;
-	border: 1px solid #e8e8e8;
-	border-radius: 2px;
-	padding: 40px;
-	margin-bottom: 20px;
-}
-
-// ACTIVITIES
 /*
-	zIndex -->
+	Swiper zIndex -->
 	hint            : 110
 	image-overlay   : 100
 	result          : 90
@@ -62,13 +49,36 @@ body {
 		@include absolute(top 0 left 0 right 0 bottom 0);
 		z-index: 110;
 		background-color: rgba(0, 0, 0, 0.7);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		font-size: 3em;
 		text-align: center;
 		font-family: sans-serif;
 		color: white;
+		&-inner {
+			@include center();
+			width: 100%;
+			padding: 20px;
+		}
+		.icon-pointer {
+			width: 48px;
+		}
+		.icon-arrow-left,
+		.icon-arrow-right {
+			width: 16px;
+			vertical-align: 36px;
+		}
+		.icon-arrow-left {
+			margin-right: -6px;
+			animation: moveLeft 500ms infinite cubic-bezier(0.65, 0.05, 0.36, 1) both;
+		}
+		.icon-arrow-right {
+			margin-left: -18px;
+			animation: moveRight 500ms infinite cubic-bezier(0.65, 0.05, 0.36, 1) both;
+		}
+		.text {
+			text-align: center;
+			font-size: 16px;
+			padding-top: 12px;
+			text-indent: -22px;
+		}
 	}
 	&-image {
 		background-position: 50% 50%;
@@ -177,6 +187,15 @@ body {
 			}
 		}
 	}
+	.icon {
+		position: relative;
+		display: inline-block;
+		& > svg {
+			display: block;
+			width: 100%;
+			fill: white;
+		}
+	}
 }
 
 // Game animations
@@ -233,21 +252,14 @@ body {
 	transform: scale(1.2);
 }
 
-// animations
-@keyframes rotateRefresh {
-	0% {
-		transform: rotate(0turn);
+@keyframes moveLeft {
+	50% {
+		transform: translateX(-7px);
 	}
-	70% {
-		transform: rotate(0turn);
-	}
-	87% {
-		transform: rotate(2turn);
-	}
-	93% {
-		transform: rotate(1.75turn);
-	}
-	100% {
-		transform: rotate(2turn);
+}
+
+@keyframes moveRight {
+	50% {
+		transform: translateX(7px);
 	}
 }

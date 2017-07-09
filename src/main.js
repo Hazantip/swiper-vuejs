@@ -19,6 +19,7 @@ function DOMLoaded() {
 	// +TODO: flexible height
 	// +TODO: fallback for underlay if there is no underlay image(set from overlay)
 	// +TODO: multiple question support
+	// +TODO: hint styles
 	// Hammer Pan Events: pan, panstart, panmove, panend, pancancel, panleft, panright, panup, pandown
 
 	const swiperDefaults = {
@@ -43,11 +44,12 @@ function DOMLoaded() {
 			currentIndex: 0,			// index of items to iterate data
 			hint: {
 				enable: false,
-				isVisible: false
+				isVisible: false,
+				text: 'החלק לבחירה'
 			},
 			timeline: {
 				showHintDelay: 300,
-				hideHintDelay: 2000,
+				hideHintDelay: 3000,
 				questionLeaveDuration: 300,
 				showResultsDuration: 3000
 			},
