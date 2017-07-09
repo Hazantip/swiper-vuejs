@@ -1,0 +1,69 @@
+<!doctype html>
+<html dir="rtl" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Swiper</title>
+	<link href="https://fonts.googleapis.com/css?family=Heebo:100,300,400&amp;subset=hebrew" rel="stylesheet">
+</head>
+<body>
+
+<div class="activity swiper" id="swiper" :class="{ disable: !enablePlay }">
+	<div class="swiper-main">
+		
+		<!-- hint -->
+		<transition name="fade">
+			<div class="swiper-hint" v-if="hint.isVisible">
+				<!-- hide after delay -->
+				HINT
+			</div>
+		</transition>
+		
+		<!-- image: always positioned absolute -->
+		<v-touch @panmove="onPanMove" @panend="onPanEnd">
+			<div
+				class="swiper-image swiper-image--overlay"
+				:class="{ left: isPanLeft, right: isPanRight }"
+				:style="[style, { backgroundImage: !question.isFlexibleHeight && 'url(' + question.imgSrc + ')' }]"
+			    v-if="question.active"
+			>
+				<img :src="question.imgSrc" alt="" v-if="question.isFlexibleHeight">
+				<div class="swiper-question">{{ question.text }}</div>
+			</div>
+		</v-touch>
+
+		<!-- Image underlay:
+	        - Behave like a sizer,
+	        - if isFlexibleHeight : height based on inner hidden img tag with src from overlay image
+	        - else : underlay height is based on paddingBottom: 100%(square class - .swiper-image--fixed)
+		-->
+		<div
+			class="swiper-image swiper-image--underlay"
+			:class="{ 'swiper-image--fixed': !question.isFlexibleHeight }"
+			:style="{ backgroundImage: setUnderlayBackgroundImage() }"
+		>
+			<img v-if="question.isFlexibleHeight" :src="question.imgSrc" alt="" style="opacity: 0; visibility: hidden;">
+		</div>
+		
+		<!-- results -->
+		<div class="swiper-results">
+			<transition name="fadeIn">
+				<div v-if="results.isCorrect && results.active"  class="swiper-result swiper-result--correct">CORRECT</div>
+				<div v-if="!results.isCorrect && results.active" class="swiper-result swiper-result--incorrect">INCORRECT</div>
+			</transition>
+			<!-- show after answer -->
+			<div class="swiper-question">{{ question.text }}</div>
+		</div>
+	</div> <!-- main END -->
+	
+	<div class="swiper-answers">
+		<!-- set one of as active on panEnd -->
+		<div class="answer accept" :class="{ active: answer.accept }" v-on:click="onAnswerClick">{{answer.acceptText}}</div>
+		<div class="answer cancel" :class="{ active: answer.cancel }" v-on:click="onAnswerClick">{{answer.cancelText}}</div>
+	</div>
+</div> <!-- swiper END -->
+
+
+</body>
+</html>
