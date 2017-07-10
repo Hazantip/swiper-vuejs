@@ -6,6 +6,7 @@ import './theme/theme.scss';
 // - images
 require('../static/images/gil2.jpg');
 require('../static/images/table-football.jpg');
+require('../static/images/dunk.jpg');
 
 /**
  *
@@ -16,10 +17,13 @@ function DOMLoaded() {
 
 	Vue.use(VueTouch);
 
-	// +TODO: flexible height
-	// +TODO: fallback for underlay if there is no underlay image(set from overlay)
-	// +TODO: multiple question support
-	// +TODO: hint styles
+	// TODO(done): flexible height
+	// TODO(done): fallback for underlay if there is no underlay image(set from overlay)
+	// TODO(done): multiple question support
+	// TODO(done): hint styles
+	// TODO(done): results icons styles
+	// TODO: max image height
+	// TODO: transition between questions
 	// Hammer Pan Events: pan, panstart, panmove, panend, pancancel, panleft, panright, panup, pandown
 
 	const swiperDefaults = {
@@ -58,8 +62,8 @@ function DOMLoaded() {
 					question: {
 						active: true,
 						text: '1 - זה משחק נחמד?',
-						imgSrc: './static/images/table-football.jpg',
-						imgSrcBack: './static/images/gil2.jpg',
+						imgSrc: './static/images/dunk.jpg',
+						imgSrcBack: './static/images/table-football.jpg',
 						isFlexibleHeight: true
 					},
 					answer: {
