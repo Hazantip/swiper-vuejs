@@ -3,12 +3,6 @@ import Vue from 'vue';
 import VueTouch from 'vue-touch';
 import './theme/theme.scss';
 
-// - images
-require('./gil2.jpg');
-require('./table-football.jpg');
-require('./dunk.jpg');
-require('./wide_nba.png');
-
 /**
  *
  */
@@ -63,8 +57,8 @@ function DOMLoaded() {
 					question: {
 						active: true,
 						text: '1 - זה משחק נחמד?',
-						imgSrc: './static/images/dunk.jpg',
-						imgSrcBack: './static/images/table-football.jpg',
+						imgSrc: '/assets/images/dunk.jpg',
+						imgSrcBack: '/assets/images/table-football.jpg',
 						isFlexibleHeight: true
 					},
 					answer: {
@@ -83,8 +77,8 @@ function DOMLoaded() {
 					question: {
 						active: true,
 						text: '2 - זה משחק נחמד?',
-						imgSrc: './static/images/gil2.jpg',
-						imgSrcBack: './static/images/table-football.jpg',
+						imgSrc: '/assets/images/gil2.jpg',
+						imgSrcBack: '/assets/images/table-football.jpg',
 						isFlexibleHeight: true
 					},
 					answer: {
@@ -103,7 +97,7 @@ function DOMLoaded() {
 					question: {
 						active: true,
 						text: '3 - זה משחק נחמד?',
-						imgSrc: './static/images/table-football.jpg',
+						imgSrc: '/assets/images/table-football.jpg',
 						imgSrcBack: '',
 						isFlexibleHeight: false
 					},
@@ -123,8 +117,8 @@ function DOMLoaded() {
 					question: {
 						active: true,
 						text: '4 - זה משחק נחמד?',
-						imgSrc: './static/images/wide_nba.png',
-						imgSrcBack: './static/images/table-football.jpg',
+						imgSrc: '/assets/images/wide_nba.png',
+						imgSrcBack: '/assets/images/table-football.jpg',
 						isFlexibleHeight: true
 					},
 					answer: {

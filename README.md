@@ -38,6 +38,16 @@ You can custom your local environment via `env.js`, so that it does not affect o
 
 This will generator minified css and scripts to `dist/`.
 
+#### To run build locally use:
+- `npm i -g http-server`
+- `http-server dist/`
+
+## Images
+
+	place images to static/assets/images
+	to get them every use next:
+`/assets/images/your-image.jpg`
+
 ## Proxy
 
 You can change your proxy rules in `proxy/rules`.

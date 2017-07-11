@@ -40,7 +40,7 @@ module.exports = {
 
       {
         test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-        loader: 'file-loader?name=[name].[ext]&publicPath=./&outputPath=static/images/'
+        loader: 'file',
       },
 
       {

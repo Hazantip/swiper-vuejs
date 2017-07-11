@@ -8,6 +8,7 @@ const env = require('../env');
 // webpack plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
+const HotModuleReplacementPlugin = require('webpack/lib/HotModuleReplacementPlugin');
 
 module.exports = webpackMerge(webpackCommon, {
 
@@ -69,16 +70,22 @@ module.exports = webpackMerge(webpackCommon, {
       inject: true,
       template: path.resolve(__dirname, '../static/index.html'),
       favicon: path.resolve(__dirname, '../static/favicon.ico')
-    })
+    }),
+    new HotModuleReplacementPlugin()
   ],
 
   devServer: {
     host: env.devServer.host || 'localhost',
     port: env.devServer.port || 3000,
-    historyApiFallback: true,
+    contentBase: path.resolve(__dirname, '../static'),
+    watchContentBase: true,
+    compress: true,
+    hot: true,
+    historyApiFallback: {
+      disableDotRule: true
+    },
     watchOptions: {
-      aggregateTimeout: 300,
-      poll: 1000
+      ignored: /node_modules/
     },
     overlay: {
       warnings: true,

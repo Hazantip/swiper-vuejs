@@ -7,6 +7,7 @@ const webpackCommon = require('./common.config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
@@ -45,7 +46,6 @@ module.exports = webpackMerge(webpackCommon, {
                 sourceMap: true,
                 importLoaders: 2,
                 //localIdentName: '[name]__[local]'
-                //localIdentName: '[local]'
               }
             },
             {
@@ -89,6 +89,11 @@ module.exports = webpackMerge(webpackCommon, {
         minifyCSS: true,
         minifyURLs: true
       }
+    }),
+    new CopyWebpackPlugin([
+      {from: path.resolve(__dirname, '../static')}
+    ], {
+      ignore: ['index.html', 'favicon.ico']
     }),
     new CleanWebpackPlugin(['dist'], {
       root: path.resolve(__dirname, '..'),
