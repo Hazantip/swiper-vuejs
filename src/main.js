@@ -4,9 +4,10 @@ import VueTouch from 'vue-touch';
 import './theme/theme.scss';
 
 // - images
-require('../static/images/gil2.jpg');
-require('../static/images/table-football.jpg');
-require('../static/images/dunk.jpg');
+require('./gil2.jpg');
+require('./table-football.jpg');
+require('./dunk.jpg');
+require('./wide_nba.png');
 
 /**
  *
@@ -22,7 +23,7 @@ function DOMLoaded() {
 	// TODO(done): multiple question support
 	// TODO(done): hint styles
 	// TODO(done): results icons styles
-	// TODO: max image height
+	// TODO(done): min/max image height
 	// TODO: transition between questions
 	// Hammer Pan Events: pan, panstart, panmove, panend, pancancel, panleft, panright, panup, pandown
 
@@ -105,6 +106,26 @@ function DOMLoaded() {
 						imgSrc: './static/images/table-football.jpg',
 						imgSrcBack: '',
 						isFlexibleHeight: false
+					},
+					answer: {
+						accept: false,
+						cancel: false,
+						acceptText: 'כן',
+						cancelText: 'לא'
+					},
+					results: {
+						active: false,
+						correctType: 'accept',
+						isCorrect: null
+					}
+				},
+				{
+					question: {
+						active: true,
+						text: '4 - זה משחק נחמד?',
+						imgSrc: './static/images/wide_nba.png',
+						imgSrcBack: './static/images/table-football.jpg',
+						isFlexibleHeight: true
 					},
 					answer: {
 						accept: false,
@@ -216,7 +237,7 @@ function DOMLoaded() {
 						...style,
 						'opacity': 0,
 						'transition': `${duration}ms ease-out`,
-						'transform': accept ? 'translate(400px, 5px) rotate(40deg)' : 'translate(-400px, 5px) rotate(-40deg)'
+						'transform': accept ? 'translate(120%, 5px) rotate(40deg)' : 'translate(-120%, 5px) rotate(-40deg)'
 					};
 					setTimeout(() => {
 						this.question.active = false;

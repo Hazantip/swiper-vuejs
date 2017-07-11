@@ -38,10 +38,10 @@
 			<div
 				class="swiper-image swiper-image--overlay"
 				:class="{ left: isPanLeft, right: isPanRight }"
-				:style="[style, { backgroundImage: !this.question.isFlexibleHeight && 'url(' + this.question.imgSrc + ')' }]"
+				:style="[style, { backgroundImage: 'url(' + this.question.imgSrc + ')' }]"
 			    v-if="question.active"
 			>
-				<img :src="question.imgSrc" alt="" v-if="question.isFlexibleHeight">
+				<!--<img :src="question.imgSrc" alt="" v-if="question.isFlexibleHeight">-->
 				<div class="swiper-question">{{ this.question.text }}</div>
 			</div>
 		</v-touch>
@@ -56,7 +56,7 @@
 			:class="{ 'swiper-image--fixed': !this.question.isFlexibleHeight }"
 			:style="{ backgroundImage: setUnderlayBackgroundImage() }"
 		>
-			<img v-if="this.question.isFlexibleHeight" :src="this.question.imgSrc" alt="" style="opacity: 0; visibility: hidden;">
+			<img v-if="this.question.isFlexibleHeight" :src="this.question.imgSrc" alt="">
 		</div>
 		
 		<!-- results -->
