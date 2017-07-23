@@ -92,8 +92,8 @@
 		isPanLeft: false,
 		isPanRight: false,
 		xLimit: 150,					// - horizontal pan limit in px
-		yLimit: 20,						// - vertical pan limit in px
-		rLimit: 15,						// - rotate on pan limit in px
+		yLimit: 50,						// - vertical pan limit in px
+		rLimit: 25,						// - rotate on pan limit in px
 		enableSwipeX: true, 			// - default false
 		enableSwipeY: true,				// - not used
 		style: {}						// - inline css object
@@ -227,7 +227,8 @@
 			console.log('updated');
 		},
 		created: function() {
-			this.runHint();
+			this.enablePlay = true;
+//			this.runHint();
 		},
 		'methods': {
 			'runHint': function () {
@@ -256,12 +257,12 @@
 				//console.info('PanMove: ', deltaX, deltaY, rest);
 				const { xLimit, yLimit, rLimit } = this;
 				const x = parseInt(deltaX, 10);
-				const y = parseInt(Math.abs(deltaY), 10) * (yLimit / xLimit);
-				const r = x * (rLimit / xLimit);
+				const y = parseInt(deltaY, 10) * (yLimit / xLimit);
+				const r = x * (rLimit / xLimit) * 0.5;
 				const isOutOfLimit = Math.abs(deltaX) > xLimit;
 				
 				this.style = {
-					'transform': `translate(${x}px, ${y}px) rotate(${r}deg)`,
+					'transform': `translate(${x}px, ${y}px) rotate(${-r}deg)`,
 					'opacity': Math.max(((xLimit - Math.abs(deltaX)) / xLimit + 0.5), 0.1), // 0 - 1
 					'boxShadow': '1px 1px 15px 0px rgba(0, 0, 0, 0.07)',
 					'borderColor': `${isOutOfLimit ? '#dded64' : ''}`
