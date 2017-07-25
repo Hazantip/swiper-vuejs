@@ -16,7 +16,7 @@ $activityTextSize: 20px;
 	}
 	&-main {
 		position: relative;
-		overflow: hidden;
+		//overflow: hidden;
 	}
 	&-hint {
 		@include absolute(top 0 left 0 right 0 bottom 0);
@@ -203,5 +203,12 @@ $activityTextSize: 20px;
 			width: 100%;
 			fill: white;
 		}
+	}
+	.fixed-wrapper {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 	}
 }

@@ -24,14 +24,16 @@
 			
 			<!-- image: always positioned absolute -->
 			<v-touch @panmove="onPanMove" @panend="onPanEnd">
-				<div
+				<div class="fixed-wrapper">
+					<div
 						class="swiper-image swiper-image--overlay"
 						:class="{ left: isPanLeft, right: isPanRight }"
-						:style="[style, { backgroundImage: 'url(' + this.question.imgSrc + ')' }]"
+						:style="[style, ignoreParentOverflow, { backgroundImage: 'url(' + this.question.imgSrc + ')' }]"
 						v-if="question.active"
-				>
-					<!--<img :src="question.imgSrc" alt="" v-if="question.isFlexibleHeight">-->
-					<div class="swiper-question">{{ this.question.text }}</div>
+					>
+						<!--<img :src="question.imgSrc" alt="" v-if="question.isFlexibleHeight">-->
+						<div class="swiper-question">{{ this.question.text }}</div>
+					</div>
 				</div>
 			</v-touch>
 			
@@ -41,9 +43,9 @@
 				- else : underlay height is based on paddingBottom: 100%(square class - .swiper-image--fixed)
 			-->
 			<div
-					class="swiper-image swiper-image--underlay"
-					:class="{ 'swiper-image--fixed': !this.question.isFlexibleHeight }"
-					:style="{ backgroundImage: setUnderlayBackgroundImage() }"
+				class="swiper-image swiper-image--underlay"
+				:class="{ 'swiper-image--fixed': !this.question.isFlexibleHeight }"
+				:style="{ backgroundImage: setUnderlayBackgroundImage() }"
 			>
 				<img v-if="this.question.isFlexibleHeight" :src="this.question.imgSrc" alt="">
 			</div>
@@ -54,15 +56,15 @@
 					<div v-if="this.results.isCorrect && this.results.active"  class="swiper-result swiper-result--correct">
 						<i class="icon icon-success">
 							<svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 329.954 329.954" style="enable-background:new 0 0 329.954 329.954;" xml:space="preserve" width="100%" height="100%">
-									<path d="M99.85,299.045c2.813,2.813,6.629,4.393,10.607,4.393c3.979,0,7.794-1.581,10.606-4.393L325.56,94.548  c2.814-2.813,4.394-6.628,4.394-10.606c0-3.979-1.58-7.794-4.394-10.607l-42.427-42.426c-5.857-5.857-15.355-5.858-21.213,0  L110.461,182.37l-42.428-42.428c-2.813-2.813-6.629-4.394-10.607-4.394s-7.793,1.581-10.606,4.394L4.393,182.369  c-5.857,5.858-5.857,15.355,0,21.213L99.85,299.045z" />
-								</svg>
+								<path d="M99.85,299.045c2.813,2.813,6.629,4.393,10.607,4.393c3.979,0,7.794-1.581,10.606-4.393L325.56,94.548  c2.814-2.813,4.394-6.628,4.394-10.606c0-3.979-1.58-7.794-4.394-10.607l-42.427-42.426c-5.857-5.857-15.355-5.858-21.213,0  L110.461,182.37l-42.428-42.428c-2.813-2.813-6.629-4.394-10.607-4.394s-7.793,1.581-10.606,4.394L4.393,182.369  c-5.857,5.858-5.857,15.355,0,21.213L99.85,299.045z" />
+							</svg>
 						</i>
 					</div>
 					<div v-if="!this.results.isCorrect && this.results.active" class="swiper-result swiper-result--incorrect">
 						<i class="icon icon-error">
 							<svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 284.559 284.559" style="enable-background:new 0 0 284.559 284.559;" xml:space="preserve" width="100%" height="100%">
-									<path d="M4.394,237.739l42.427,42.427c2.812,2.813,6.629,4.394,10.606,4.394c3.978,0,7.794-1.581,10.606-4.394  l74.246-74.246l74.246,74.246c2.813,2.813,6.629,4.394,10.606,4.394c3.978,0,7.794-1.581,10.607-4.394l42.427-42.427  c5.858-5.858,5.858-15.355,0-21.213L205.92,142.28l74.245-74.247c2.814-2.813,4.394-6.628,4.394-10.606  c0-3.979-1.58-7.794-4.394-10.607L237.739,4.393c-5.857-5.858-15.356-5.858-21.213,0.001L142.28,78.639L68.033,4.394  c-5.857-5.858-15.356-5.858-21.213,0L4.394,46.82C1.58,49.633,0,53.448,0,57.426c0,3.978,1.58,7.793,4.394,10.606l74.245,74.247  L4.394,216.526C-1.465,222.384-1.465,231.881,4.394,237.739z" />
-								</svg>
+								<path d="M4.394,237.739l42.427,42.427c2.812,2.813,6.629,4.394,10.606,4.394c3.978,0,7.794-1.581,10.606-4.394  l74.246-74.246l74.246,74.246c2.813,2.813,6.629,4.394,10.606,4.394c3.978,0,7.794-1.581,10.607-4.394l42.427-42.427  c5.858-5.858,5.858-15.355,0-21.213L205.92,142.28l74.245-74.247c2.814-2.813,4.394-6.628,4.394-10.606  c0-3.979-1.58-7.794-4.394-10.607L237.739,4.393c-5.857-5.858-15.356-5.858-21.213,0.001L142.28,78.639L68.033,4.394  c-5.857-5.858-15.356-5.858-21.213,0L4.394,46.82C1.58,49.633,0,53.448,0,57.426c0,3.978,1.58,7.793,4.394,10.606l74.245,74.247  L4.394,216.526C-1.465,222.384-1.465,231.881,4.394,237.739z" />
+							</svg>
 						</i>
 					</div>
 				</transition>
@@ -96,6 +98,7 @@
 		rLimit: 25,						// - rotate on pan limit in px
 		enableSwipeX: true, 			// - default false
 		enableSwipeY: true,				// - not used
+		ignoreParentOverflow: {},
 		style: {}						// - inline css object
 	};
 	
@@ -219,6 +222,7 @@
 		},
 		mounted: function() {
 			console.log('mounted');
+			document.addEventListener('resize', this.setIgnoreParentOverflow);
 		},
 		beforeUpdate: function() {
 			console.log('beforeUpdate');
@@ -254,6 +258,7 @@
 				}
 			},
 			'onPanMove': function ({ deltaX, deltaY }, ...rest) {
+				this.setIgnoreParentOverflow();
 				//console.info('PanMove: ', deltaX, deltaY, rest);
 				const { xLimit, yLimit, rLimit } = this;
 				const x = parseInt(deltaX, 10);
@@ -296,9 +301,14 @@
 			},
 			'onAnswerClick': function(event) {
 				const isAccept = event.target.classList.contains('accept');
-				this.selectAnswer({ deltaX: isAccept ? 1 : -1 });
-				this.hideQuestion({ animateBefore: true });
-				this.showResults();
+				this.setIgnoreParentOverflow();
+
+				setTimeout(() => {
+					this.selectAnswer({ deltaX: isAccept ? 1 : -1 });
+					this.hideQuestion({ animateBefore: true });
+					this.showResults();
+				}, 150);
+
 			},
 			'hideQuestion': function({ animateBefore = false, duration = this.timeline.questionLeaveDuration }) {
 				const { style } = this;
@@ -353,7 +363,19 @@
 				this.question	 = this.items[index].question;
 				this.answer		 = this.items[index].answer;
 				this.results	 = this.items[index].results;
-			}
+			},
+			'setIgnoreParentOverflow': function() {
+				// set image fixed with size to workaround overflow
+				this.ignoreParentOverflow = {
+					'position': 'fixed',
+					'top': 'auto',
+					'left': 'auto',
+					'right': 'auto',
+					'bottom': 'auto',
+					'width': `${this.$el.getBoundingClientRect().width}px`,
+					'height': `${this.$el.querySelector('.swiper-main').getBoundingClientRect().height}px`,
+				};
+			},
 		}
 	}
 </script>
