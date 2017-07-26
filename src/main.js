@@ -14,6 +14,7 @@ function DOMLoaded() {
 	// TODO(done): hint styles
 	// TODO(done): results icons styles
 	// TODO(done): min/max image height
+	// TODO: decide not/will be possible to scroll? it's important for ignoreOverflowParent solution
 	// TODO: transition between questions
 	// Hammer Pan Events: pan, panstart, panmove, panend, pancancel, panleft, panright, panup, pandown
 

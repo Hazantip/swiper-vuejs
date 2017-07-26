@@ -90,16 +90,20 @@
 	const delay = (time) => (result) => new Promise(resolve => setTimeout(() => resolve(result), time));
 
 	const swiperDefaults = {
-		enablePlay: true,				// enable/disable events
+		enablePlay: false,				// - enable/disable pointer events
 		isPanLeft: false,
 		isPanRight: false,
 		xLimit: 150,					// - horizontal pan limit in px
 		yLimit: 50,						// - vertical pan limit in px
 		rLimit: 25,						// - rotate on pan limit in px
-		enableSwipeX: true, 			// - default false
-		enableSwipeY: true,				// - not used
-		ignoreParentOverflow: {},
-		style: {}						// - inline css object
+		enableSwipeX: true, 			// - not used
+		enableSwipeY: true, 			// - not used
+		ignoreParentOverflow: {},       // - css solution 'how to ignore overflow hidden of parent elements'
+		style: {},						// - inline css object
+		question: {},   				// - current
+		answer: {}, 					// - current
+		results: {},    				// - current
+		currentIndex: 0,    			// - index of items to iterate data
 	};
 	
 	export default {
@@ -115,14 +119,9 @@
 		},
 		data () {
 			return {
-				...swiperDefaults,			// default params
-				question: {},				// current
-				answer: {},					// current
-				results: {},				// current
-				enablePlay: false,			// initially overrides default value
-				currentIndex: 0,			// index of items to iterate data
+				...swiperDefaults,			// - default params
 				hint: {
-					enable: false,
+					enable: true,           // - enable/disable hint
 					isVisible: false,
 					text: 'החלק לבחירה'
 				},
@@ -216,28 +215,33 @@
 				]
 			}
 		},
-		beforeMount: function() {
+		beforeMount () {
 			console.log('beforeMount');
 			this.setCurrentItem();
 		},
-		mounted: function() {
+		mounted () {
 			console.log('mounted');
-			document.addEventListener('resize', this.setIgnoreParentOverflow);
+			window.addEventListener('resize', this.setIgnoreParentOverflow);
+			document.addEventListener('scroll', this.setIgnoreParentOverflow);
 		},
-		beforeUpdate: function() {
+		beforeUpdate () {
 			console.log('beforeUpdate');
 		},
-		updated: function() {
+		updated () {
 			console.log('updated');
 		},
-		created: function() {
-			this.enablePlay = true;
-//			this.runHint();
+		created () {
+			if (this.hint.enable) {
+				this.runHint();
+			} else {
+				this.enablePlay = true;
+			}
 		},
 		'methods': {
-			'runHint': function () {
+			runHint () {
+				this.enablePlay = false;
 				this.hint.enable = this.currentIndex === 0;
-				
+
 				const { showHintDelay, hideHintDelay } = this.timeline;
 				const showHint = () => {
 					this.hint.isVisible = true;
@@ -257,9 +261,8 @@
 					this.enablePlay = true;
 				}
 			},
-			'onPanMove': function ({ deltaX, deltaY }, ...rest) {
+			onPanMove ({ deltaX, deltaY }, ...rest) {
 				this.setIgnoreParentOverflow();
-				//console.info('PanMove: ', deltaX, deltaY, rest);
 				const { xLimit, yLimit, rLimit } = this;
 				const x = parseInt(deltaX, 10);
 				const y = parseInt(deltaY, 10) * (yLimit / xLimit);
@@ -275,7 +278,7 @@
 				this.isPanLeft	= x < 0;
 				this.isPanRight = x > 0;
 			},
-			'onPanEnd': function ({ deltaX }, ...rest) {
+			onPanEnd ({ deltaX }, ...rest) {
 				//console.info('PanEnd: ', ...rest);
 				const { xLimit, style } = this;
 				const isOutOfLimit = Math.abs(deltaX) > xLimit;
@@ -290,16 +293,16 @@
 					this.style = {
 						...style,
 						'opacity': 1,
-						'transition': '250ms ease-out',
+						'transition': '250ms ease-out, top 0ms linear', // top 0ms -> for ignoreParentOverflow styles
 						'transform': 'translate(0px, 0px) rotate(0deg)'
 					};
 				}
 			},
-			'selectAnswer': function({ deltaX }) {
+			selectAnswer ({ deltaX }) {
 				this.answer.accept = deltaX > 0;
 				this.answer.cancel = deltaX < 0;
 			},
-			'onAnswerClick': function(event) {
+			onAnswerClick (event) {
 				const isAccept = event.target.classList.contains('accept');
 				this.setIgnoreParentOverflow();
 
@@ -310,7 +313,7 @@
 				}, 150);
 
 			},
-			'hideQuestion': function({ animateBefore = false, duration = this.timeline.questionLeaveDuration }) {
+			hideQuestion ({ animateBefore = false, duration = this.timeline.questionLeaveDuration }) {
 				const { style } = this;
 				const { accept } = this.answer;
 				
@@ -329,7 +332,7 @@
 					this.question.active = false;
 				}
 			},
-			'showResults': function() {
+			showResults () {
 				const { showResultsDuration } = this.timeline;
 				Promise.resolve()
 					.then(() => {
@@ -340,10 +343,10 @@
 					.then(delay(showResultsDuration))
 					.then(this.showNextQuestion);
 			},
-			'reset': function() {
-				Object.assign(this, swiperDefaults, {});
+			reset () {
+				Object.assign(this, swiperDefaults, { enablePlay: true });
 			},
-			'showNextQuestion': function() {
+			showNextQuestion () {
 				// ... iterate data array
 				const nextIndex = this.currentIndex + 1;
 				if (this.items.length > nextIndex) {
@@ -355,20 +358,21 @@
 						});
 				}
 			},
-			'setUnderlayBackgroundImage': function() {
+			setUnderlayBackgroundImage () {
 				const url = this.question.imgSrcBack || this.question.imgSrc;
 				return `url(${url})`;
 			},
-			'setCurrentItem': function(index = this.currentIndex) {
+			setCurrentItem (index = this.currentIndex) {
 				this.question	 = this.items[index].question;
 				this.answer		 = this.items[index].answer;
 				this.results	 = this.items[index].results;
 			},
-			'setIgnoreParentOverflow': function() {
-				// set image fixed with size to workaround overflow
+			setIgnoreParentOverflow (event = null) {
+				const isScroll = (event && event.type === 'scroll') || window.pageYOffset;
+				
 				this.ignoreParentOverflow = {
 					'position': 'fixed',
-					'top': 'auto',
+					'top': isScroll ? `${this.$el.getBoundingClientRect().top}px` : 'auto',
 					'left': 'auto',
 					'right': 'auto',
 					'bottom': 'auto',
