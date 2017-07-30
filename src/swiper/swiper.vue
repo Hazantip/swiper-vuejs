@@ -1,5 +1,6 @@
 <template>
 	<div class="swiper" :class="{ disable: !enablePlay }">
+		<!-- NOTE: do not change swiper-main class; used for get height by setIgnoreParentOverflow method -->
 		<div class="swiper-main">
 			<!-- hint -->
 			<transition name="fade">
@@ -31,7 +32,6 @@
 						:style="[style, ignoreParentOverflow, { backgroundImage: 'url(' + this.question.imgSrc + ')' }]"
 						v-if="question.active"
 					>
-						<!--<img :src="question.imgSrc" alt="" v-if="question.isFlexibleHeight">-->
 						<div class="swiper-question">{{ this.question.text }}</div>
 					</div>
 				</div>
@@ -96,8 +96,6 @@
 		xLimit: 150,					// - horizontal pan limit in px
 		yLimit: 50,						// - vertical pan limit in px
 		rLimit: 25,						// - rotate on pan limit in px
-		enableSwipeX: true, 			// - not used
-		enableSwipeY: true, 			// - not used
 		ignoreParentOverflow: {},       // - css solution 'how to ignore overflow hidden of parent elements'
 		style: {},						// - inline css object
 		question: {},   				// - current
@@ -216,19 +214,11 @@
 			}
 		},
 		beforeMount () {
-			console.log('beforeMount');
 			this.setCurrentItem();
 		},
 		mounted () {
-			console.log('mounted');
 			window.addEventListener('resize', this.setIgnoreParentOverflow);
 			document.addEventListener('scroll', this.setIgnoreParentOverflow);
-		},
-		beforeUpdate () {
-			console.log('beforeUpdate');
-		},
-		updated () {
-			console.log('updated');
 		},
 		created () {
 			if (this.hint.enable) {
@@ -323,7 +313,7 @@
 						...style,
 						'opacity': 0,
 						'transition': `${duration}ms ease-out`,
-						'transform': accept ? 'translate(120%, 5px) rotate(40deg)' : 'translate(-120%, 5px) rotate(-40deg)'
+						'transform': accept ? 'translate(120%, 5px) rotate(-40deg)' : 'translate(-120%, 5px) rotate(40deg)'
 					};
 					setTimeout(() => {
 						this.question.active = false;
@@ -385,6 +375,5 @@
 </script>
 
 <style lang="scss">
-	@import "../_mixins.scss";
 	@import 'swiper.scss';
 </style>
